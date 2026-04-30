@@ -8,10 +8,7 @@ import json
 
 app = Flask(__name__)
 
-# --- CONFIGURATION DATABASE ---
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-db_path = os.path.join(BASE_DIR, 'omnicollect_executive.db')
-
+# Déplace l'appel ici, hors du bloc "if __name__ == '__main__':"
 def init_db():
     conn = sqlite3.connect(db_path)
     conn.execute('''CREATE TABLE IF NOT EXISTS collecte 
@@ -20,6 +17,9 @@ def init_db():
          unite TEXT, region TEXT, ville TEXT)''')
     conn.commit()
     conn.close()
+
+# Appel automatique au démarrage global
+init_db()
 
 # --- LOGIQUE DE CALCUL STATISTIQUE ---
 def compute_sector_stats(sdf):
