@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mballa Yves Elysee</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Police ultra-moderne -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Outfit', 'sans-serif'] },
+                    colors: {
+                        dark: '#030712',
+                        glass: 'rgba(255, 255, 255, 0.03)',
+                        glassBorder: 'rgba(255, 255, 255, 0.08)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #030712; color: #f8fafc; overflow-x: hidden; }
+        
+        /* Effet Verre Dépoli (Glassmorphism) */
+        .glass-card {
+            background: rgba(17, 24, 39, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Blobs lumineux en arrière-plan */
+        .blob {
+            position: absolute; filter: blur(120px); z-index: -1; opacity: 0.4; animation: pulse 10s infinite alternate;
+        }
+        @keyframes pulse { 0% { transform: scale(1); } 100% { transform: scale(1.2); } }
+
+        /* Scrollbar personnalisée */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #030712; }
+        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6366f1; }
+        
+        .gradient-text {
+            background: linear-gradient(to right, #38bdf8, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-indigo-500 selection:text-white">
+
+    <!-- Blobs Décoratifs -->
+    <div class="blob bg-indigo-600 w-96 h-96 rounded-full top-0 left-0"></div>
+    <div class="blob bg-sky-600 w-96 h-96 rounded-full top-1/2 right-0"></div>
+    <div class="blob bg-fuchsia-600 w-96 h-96 rounded-full bottom-0 left-1/4"></div>
+
+    <!-- NAVBAR -->
+    <nav class="fixed w-full z-50 glass-card rounded-none border-t-0 border-l-0 border-r-0 border-b border-white/10 px-6 py-4 flex justify-between items-center">
+        <div class="text-2xl font-black tracking-tighter">Mballa Yves Elysée<span class="text-indigo-500">24G2879</span></div>
+        <div class="space-x-6 text-sm font-semibold text-gray-400 hidden md:block">
+            <a href="#saisie" class="hover:text-white transition">Nouvelle Saisie</a>
+            <a href="#global" class="hover:text-white transition">Vue Globale</a>
+            <a href="#analytics" class="hover:text-white transition">Analytique</a>
+        </div>
+        <a href="#saisie" class="bg-white text-black px-5 py-2 rounded-full text-sm font-bold hover:scale-105 transition transform">Démarrer</a>
+    </nav>
+
+    <!-- HERO SECTION (Plein écran) -->
+    <section class="min-h-screen flex flex-col justify-center items-center text-center px-4 relative pt-20">
+        <div class="inline-block px-4 py-1.5 rounded-full border border-white/10 glass-card text-xs font-bold tracking-widest text-indigo-400 mb-6">
+            SYSTÈME D'ANALYSE INF232 EC2
+        </div>
+        <h1 class="text-6xl md:text-8xl font-black mb-6 tracking-tight leading-tight max-w-5xl">
+            La donnée devient <br /> <span class="gradient-text">une œuvre d'art.</span>
+        </h1>
+        <p class="text-gray-400 text-lg md:text-xl max-w-2xl mb-12">
+            Oubliez les tableaux Excel ennuyeux. Collectez, analysez et visualisez vos données sectorielles dans une expérience fluide et prédictive.
+        </p>
+        <div class="animate-bounce mt-10">
+            <a href="#saisie" class="text-white/50 hover:text-white">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- SECTION 1 : VUE GLOBALE & FORMULAIRE -->
+    <section id="saisie" class="py-20 px-4 md:px-8 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            
+            <!-- VUE GLOBALE (Pie Chart Géant) -->
+            <div id="globalContainer" class="glass-card p-8 md:p-12 flex flex-col justify-center relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/20 blur-3xl rounded-full"></div>
+                <h2 class="text-3xl font-black mb-2">Impact Global</h2>
+                <p class="text-gray-400 mb-8 text-sm">Répartition en temps réel de la base de données.</p>
+                
+                <div class="relative h-80 w-full flex justify-center items-center">
+                    <canvas id="globalPieChart"></canvas>
+                    <!-- Compteur central -->
+                    <!-- Trouve ce bloc dans ton code et modifie l'ID et le texte -->
+<div class="absolute inset-0 flex flex-col justify-center items-center pointer-events-none">
+    <div class="flex items-baseline">
+        <span id="displayValue" class="text-5xl font-black text-white">0</span>
+        <span id="percentSymbol" class="text-2xl font-bold text-indigo-400 hidden">%</span>
+    </div>
+    <span id="valueLabel" class="text-xs text-gray-400 uppercase tracking-widest">Entrées</span>
+</div>
+                </div>
+            </div>
+
+            <!-- FORMULAIRE DE SAISIE PRO -->
+            <div class="glass-card p-8 md:p-12 relative overflow-hidden group">
+                <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-sky-400 to-indigo-600"></div>
+                <h2 class="text-3xl font-black mb-2">Nouvelle Saisie</h2>
+                <p class="text-gray-400 mb-8 text-sm">Injectez de nouvelles données dans le système.</p>
+
+                <form action="/add" method="POST" class="space-y-6">
+                    <!-- Sélecteur de domaine stylisé -->
+                    <div class="relative">
+                        <label class="text-xs uppercase tracking-widest text-gray-500 font-bold mb-2 block">Domaine d'étude</label>
+                        <select name="secteur" id="formSecteur" onchange="updateForm()" class="w-full bg-dark/50 border border-white/10 rounded-xl p-4 text-white font-semibold appearance-none focus:outline-none focus:border-indigo-500 transition cursor-pointer">
+                            <option value="Sante"> Santé & Épidémiologie</option>
+                            <option value="Agri"> Agriculture & Élevage</option>
+                            <option value="Eco"> Économie & Finance</option>
+                        </select>
+                    </div>
+
+                    <!-- Indicateurs dynamiques -->
+                    <div>
+                        <label class="text-xs uppercase tracking-widest text-gray-500 font-bold mb-2 block">Indicateur</label>
+                        <select name="ind_Sante" id="opt_Sante" class="dom-opt w-full bg-dark/50 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-indigo-500 transition"><option>Cas Paludisme</option><option>Dépistage VIH</option><option>Taux Guérison</option></select>
+                        <select name="ind_Agri" id="opt_Agri" class="dom-opt hidden w-full bg-dark/50 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-indigo-500 transition"><option>Production (Kg)</option><option>Taux Humidité (%)</option></select>
+                        <select name="ind_Eco" id="opt_Eco" class="dom-opt hidden w-full bg-dark/50 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-indigo-500 transition"><option>Inflation (%)</option><option>Revenu (FCFA)</option></select>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <label class="text-xs uppercase tracking-widest text-gray-500 font-bold mb-2 block">Valeur</label>
+                            <input type="number" step="0.01" name="valeur" class="w-full bg-dark/50 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-indigo-500 transition" required>
+                        </div>
+                        <div>
+                            <label class="text-xs uppercase tracking-widest text-gray-500 font-bold mb-2 block">Unité</label>
+                            <input type="text" name="unite" class="w-full bg-dark/50 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-indigo-500 transition" required>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6">
+                        <input type="text" name="region" placeholder="Région" class="w-full bg-dark/50 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-indigo-500 transition">
+                        <input type="text" name="ville" placeholder="Ville" class="w-full bg-dark/50 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-indigo-500 transition">
+                    </div>
+
+                    <button type="submit" class="w-full bg-white text-black hover:bg-gray-200 py-4 rounded-xl font-black text-lg transition transform hover:scale-[1.02] shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+                        SYNCHRONISER
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION ANALYTIQUE (LONG SCROLL GÉNÉRÉ DYNAMIQUEMENT) -->
+    <section id="analytics" class="py-20 px-4 md:px-8 max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-black mb-4">Deep Analytics</h2>
+            <p class="text-gray-400">Analyse descriptive détaillée générée en temps réel.</p>
+        </div>
+
+        <div id="dynamicSectors" class="space-y-24">
+            <!-- Le JS va injecter les sections ici -->
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-white/10 py-10 text-center text-gray-600 text-sm font-semibold">
+        Mballa Yves Elysée. 24G2879.
+    </footer>
+
+    <script>
+        const dbData = {{ data | safe }};
+        
+        // Gestion du Formulaire
+        function updateForm() {
+            const s = document.getElementById('formSecteur').value;
+            document.querySelectorAll('.dom-opt').forEach(el => { el.classList.add('hidden'); el.disabled = true; });
+            document.getElementById('opt_' + s).classList.remove('hidden');
+            document.getElementById('opt_' + s).disabled = false;
+        }
+
+        // Configuration Globale Chart.js
+        Chart.defaults.color = '#9ca3af';
+        Chart.defaults.font.family = "'Outfit', sans-serif";
+
+        window.onload = () => {
+            updateForm();
+
+     if(!dbData.is_empty) {
+    // Calcul du secteur dominant (optionnel)
+    const totalEntrees = dbData.global.total;
+    const labels = dbData.global.labels;
+    const pourcentages = dbData.global.pourcentages;
+
+    // On affiche par défaut le % du premier secteur dans la liste
+    document.getElementById('displayValue').innerText = pourcentages[0];
+    document.getElementById('percentSymbol').classList.remove('hidden');
+    document.getElementById('valueLabel').innerText = labels[0];
+
+    new Chart(document.getElementById('globalPieChart'), {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{ 
+                data: pourcentages, 
+                backgroundColor: ['#6366f1', '#0ea5e9', '#d946ef', '#10b981'], 
+                borderWidth: 0,
+                hoverOffset: 20 // Effet au survol plus prononcé
+            }]
+        },
+        options: { 
+            responsive: true, 
+            maintainAspectRatio: false, 
+            cutout: '80%', // Cercle plus fin pour faire ressortir le texte
+            plugins: { 
+                legend: { position: 'bottom' },
+                tooltip: { enabled: true }
+            },
+            // INTERACTIVITÉ : Changer le texte central au survol d'un secteur
+            onHover: (event, chartElement) => {
+                if (chartElement.length > 0) {
+                    const index = chartElement[0].index;
+                    document.getElementById('displayValue').innerText = pourcentages[index];
+                    document.getElementById('valueLabel').innerText = labels[index];
+                }
+            }
+        }
+    });
+
+                // 2. GÉNÉRATION DYNAMIQUE (Code Mis à jour)
+                Object.keys(dbData.secteurs).forEach(secKey => {
+                    const secData = dbData.secteurs[secKey];
+                    if(secData) {
+                        const sectionHTML = `
+                            <div class="relative py-12 border-b border-white/5">
+                                <h3 class="text-4xl font-black mb-12 bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">
+                                    Secteur : ${secKey}
+                                </h3>
+
+                                <!-- GRID DE GRAPHIQUES PRO -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                    
+                                    <!-- 1. RÉGRESSION LINÉAIRE -->
+                                    <div class="glass-card p-6 h-80">
+                                        <p class="text-xs font-bold text-gray-500 uppercase mb-4">Régression & Tendance</p>
+                                        <canvas id="reg_${secKey}"></canvas>
+                                        <p class="text-[10px] font-mono text-center mt-2 text-indigo-400">${secData.regression_txt}</p>
+                                    </div>
+
+                                    <!-- 2. EFFECTIFS CUMULÉS (ECC/ECD) -->
+                                    <div class="glass-card p-6 h-80">
+                                        <p class="text-xs font-bold text-gray-500 uppercase mb-4">Cumuls (ECC vs ECD)</p>
+                                        <canvas id="cumul_${secKey}"></canvas>
+                                    </div>
+
+                                    <!-- 3. ÉVOLUTION MOYENNE -->
+                                    <div class="glass-card p-6 h-80">
+                                        <p class="text-xs font-bold text-gray-500 uppercase mb-4">Moyenne Mobile</p>
+                                        <canvas id="moy_${secKey}"></canvas>
+                                    </div>
+
+                                    <!-- 4. FRÉQUENCES RELATIVES -->
+                                    <div class="glass-card p-6 h-80">
+                                        <p class="text-xs font-bold text-gray-500 uppercase mb-4">Répartition des Fréquences (%)</p>
+                                        <canvas id="freq_${secKey}"></canvas>
+                                    </div>
+
+                                    <!-- 5. ANALYSE DE VARIANCE -->
+                                    <div class="glass-card p-6 h-80">
+                                        <p class="text-xs font-bold text-gray-500 uppercase mb-4">Dispersion (Variance)</p>
+                                        <canvas id="var_${secKey}"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        document.getElementById('dynamicSectors').insertAdjacentHTML('beforeend', sectionHTML);
+
+                        // --- INITIALISATION DES 5 CHARTES ---
+                        
+                        // 1. Régression (Scatter + Line)
+                        new Chart(document.getElementById(`reg_${secKey}`), {
+                            type: 'scatter',
+                            data: {
+                                datasets: [
+                                    { label: 'Données', data: secData.valeurs.map((v, i) => ({x: i, y: v})), backgroundColor: '#6366f1' },
+                                    { label: 'Régression', data: secData.reg_line.map((v, i) => ({x: i, y: v})), type: 'line', borderColor: '#f472b6', borderDash: [5,5], pointRadius: 0, fill: false }
+                                ]
+                            },
+                            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                        });
+
+                        // 2. Cumuls (ECC/ECD)
+                        new Chart(document.getElementById(`cumul_${secKey}`), {
+                            type: 'line',
+                            data: {
+                                labels: secData.labels_freq,
+                                datasets: [
+                                    { label: 'ECC', data: secData.data_ecc, borderColor: '#4ade80', tension: 0.3 },
+                                    { label: 'ECD', data: secData.data_ecd, borderColor: '#f87171', tension: 0.3 }
+                                ]
+                            },
+                            options: { responsive: true, maintainAspectRatio: false }
+                        });
+
+                        // 3. Moyenne Mobile
+                        new Chart(document.getElementById(`moy_${secKey}`), {
+                            type: 'line',
+                            data: {
+                                labels: secData.indices,
+                                datasets: [{ label: 'Moyenne Evol.', data: secData.moyenne_evol, borderColor: '#fbbf24', fill: true, backgroundColor: 'rgba(251, 191, 36, 0.1)', tension: 0.4 }]
+                            },
+                            options: { responsive: true, maintainAspectRatio: false }
+                        });
+
+                        // 4. Fréquences
+                        new Chart(document.getElementById(`freq_${secKey}`), {
+                            type: 'bar',
+                            data: {
+                                labels: secData.labels_freq,
+                                datasets: [{ label: '%', data: secData.data_fi, backgroundColor: '#38bdf8', borderRadius: 5 }]
+                            },
+                            options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false }
+                        });
+
+                        // 5. Variance
+                        new Chart(document.getElementById(`var_${secKey}`), {
+                            type: 'bar',
+                            data: {
+                                labels: secData.indices,
+                                datasets: [{ label: 'Écart', data: secData.valeurs.map(v => v - secData.moyenne), backgroundColor: '#a78bfa' }]
+                            },
+                            options: { responsive: true, maintainAspectRatio: false }
+                        });
+                    }
+                });
+
+                if(document.getElementById('dynamicSectors').innerHTML.trim() === '') {
+                    document.getElementById('dynamicSectors').innerHTML = `
+                        <div class="glass-card p-20 text-center text-gray-500 font-bold tracking-widest uppercase border-dashed border-2 border-white/10">
+                            Base de données vierge. Commencez par saisir des informations.
+                        </div>
+                    `;
+                }
+            }
+        };
+    </script>
+</body>
+</html>
