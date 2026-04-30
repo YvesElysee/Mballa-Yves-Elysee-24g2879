@@ -8,7 +8,11 @@ import json
 
 app = Flask(__name__)
 
-# Déplace l'appel ici, hors du bloc "if __name__ == '__main__':"
+# --- 1. DÉFINITION DES VARIABLES DE CHEMIN (DOIT ÊTRE EN PREMIER) ---
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+db_path = os.path.join(BASE_DIR, 'omnicollect_executive.db')
+
+# --- 2. DÉFINITION DE LA FONCTION ---
 def init_db():
     conn = sqlite3.connect(db_path)
     conn.execute('''CREATE TABLE IF NOT EXISTS collecte 
@@ -18,8 +22,11 @@ def init_db():
     conn.commit()
     conn.close()
 
-# Appel automatique au démarrage global
+# --- 3. APPEL DE LA FONCTION (APRÈS LA DÉFINITION DE db_path) ---
 init_db()
+
+# --- LOGIQUE DE CALCUL STATISTIQUE ---
+# (Le reste de ton code compute_sector_stats et les routes restent inchangés)
 
 # --- LOGIQUE DE CALCUL STATISTIQUE ---
 def compute_sector_stats(sdf):
